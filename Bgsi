@@ -1,0 +1,73 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Bgsi Script",
+    SubTitle = "By Oren",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local Tab = Window:AddTab({ Title = "Main", Icon = "" })
+
+-- Auto Blow Toggle
+local BlowToggle = Tab:AddToggle("Auto Blow", {
+    Title = "Auto Blow",
+    Default = false
+})
+
+local blowRunning = false
+
+BlowToggle:OnChanged(function()
+    local enabled = BlowToggle.Value
+    if enabled and not blowRunning then
+        blowRunning = true
+        task.spawn(function()
+            while blowRunning do
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("Shared")
+                    :WaitForChild("Framework")
+                    :WaitForChild("Network")
+                    :WaitForChild("Remote")
+                    :WaitForChild("Event")
+                    :FireServer("BlowBubble")
+                task.wait()
+            end
+        end)
+    else
+        blowRunning = false
+    end
+end)
+
+local SellToggle = Tab:AddToggle("Auto Sell", {
+    Title = "Auto Sell",
+    Default = false
+})
+
+local sellRunning = false
+
+SellToggle:OnChanged(function()
+    local enabled = SellToggle.Value
+    if enabled and not sellRunning then
+        sellRunning = true
+        task.spawn(function()
+            while sellRunning do
+                local args = {
+                    [1] = "SellBubble"
+                }
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("Shared")
+                    :WaitForChild("Framework")
+                    :WaitForChild("Network")
+                    :WaitForChild("Remote")
+                    :WaitForChild("Event")
+                    :FireServer(unpack(args))
+                task.wait()
+            end
+        end)
+    else
+        sellRunning = false
+    end
+end)
