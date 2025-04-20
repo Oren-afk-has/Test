@@ -1,73 +1,83 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Bgsi = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 
-local Window = Fluent:CreateWindow({
-    Title = "Bgsi Script",
-    SubTitle = "By Oren",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
-    Acrylic = true,
-    Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl
+--Window
+local window = Bgsi:Window({
+    Title = "Bgsi Script", 
+    isMobile = false,
+    Size = {
+        X = 550,
+        Y = 400
+    }
 })
 
-local Tab = Window:AddTab({ Title = "Main", Icon = "" })
-
--- Auto Blow Toggle
-local BlowToggle = Tab:AddToggle("Auto Blow", {
-    Title = "Auto Blow",
-    Default = false
+--Tab1
+local Main = window:Tab({
+    Name = "Main",
+    tabColor = Color3.fromRGB(180, 240, 67),
+    Image = "rbxassetid://10734908793"
 })
 
-local blowRunning = false
+--Main Toggles
+local isToggled = false
 
-BlowToggle:OnChanged(function()
-    local enabled = BlowToggle.Value
-    if enabled and not blowRunning then
-        blowRunning = true
-        task.spawn(function()
-            while blowRunning do
-                game:GetService("ReplicatedStorage")
-                    :WaitForChild("Shared")
-                    :WaitForChild("Framework")
-                    :WaitForChild("Network")
-                    :WaitForChild("Remote")
-                    :WaitForChild("Event")
-                    :FireServer("BlowBubble")
+Main:Toggle({
+    Name = "Auto Blow",
+    Default = false,
+    Callback = function(var)
+        isToggled = var
+        if isToggled then
+            while isToggled do
+                local args = {
+                    [1] = "BlowBubble"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
                 task.wait()
             end
-        end)
-    else
-        blowRunning = false
+        end
     end
-end)
-
-local SellToggle = Tab:AddToggle("Auto Sell", {
-    Title = "Auto Sell",
-    Default = false
 })
 
-local sellRunning = false
+local isToggled = false
 
-SellToggle:OnChanged(function()
-    local enabled = SellToggle.Value
-    if enabled and not sellRunning then
-        sellRunning = true
-        task.spawn(function()
-            while sellRunning do
+Main:Toggle({
+    Name = "Auto Sell",
+    Default = false,
+    Callback = function(var)
+        isToggled = var
+
+        if isToggled then
+            while isToggled do
                 local args = {
                     [1] = "SellBubble"
                 }
-                game:GetService("ReplicatedStorage")
-                    :WaitForChild("Shared")
-                    :WaitForChild("Framework")
-                    :WaitForChild("Network")
-                    :WaitForChild("Remote")
-                    :WaitForChild("Event")
-                    :FireServer(unpack(args))
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                wait(0.1)
+            end
+        end
+    end
+})
+
+local isToggled = false
+
+Main:Toggle({
+    Name = "Auto Collect Pickups",
+    Default = false,
+    Callback = function(var)
+        isToggled = var
+
+        if isToggled then
+            while isToggled do
+                local renderedObject = workspace.Rendered:GetChildren()[14]
+                if renderedObject then
+                    for _, coin in pairs(renderedObject:GetChildren()) do
+                        game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(coin.Name)
+                        if coin and coin.Parent == renderedObject then
+                            coin:Destroy()
+                        end
+                    end
+                end
                 task.wait()
             end
-        end)
-    else
-        sellRunning = false
+        end
     end
-end)
+})
