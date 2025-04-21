@@ -1,93 +1,116 @@
--- Create the Loading Screen GUI
-local player = game.Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
--- Create the screen GUI
-local loadingScreen = Instance.new("ScreenGui")
-loadingScreen.Name = "LoadingScreen"
-loadingScreen.Parent = playerGui
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
 
--- Create the background frame for the loading screen
-local background = Instance.new("Frame")
-background.Size = UDim2.new(1, 0, 1, 0)  -- Full screen
-background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- Black background
-background.BackgroundTransparency = 0.6  -- Semi-transparent
-background.Position = UDim2.new(0, 0, 0, 0)
-background.Parent = loadingScreen
-
--- Create a rotating loading icon (using an image)
-local loadingIcon = Instance.new("ImageLabel")
-loadingIcon.Size = UDim2.new(0, 100, 0, 100)
-loadingIcon.Position = UDim2.new(0.5, -50, 0.4, -50)  -- Centered on screen
-loadingIcon.Image = "rbxassetid://6023426921"  -- Replace with your own loading image
-loadingIcon.BackgroundTransparency = 1  -- Transparent background
-loadingIcon.Parent = background
-
--- Create the loading text label
-local loadingText = Instance.new("TextLabel")
-loadingText.Text = "Loading..."
-loadingText.Size = UDim2.new(0, 200, 0, 50)
-loadingText.Position = UDim2.new(0.5, -100, 0.6, -25)  -- Centered below the icon
-loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text
-loadingText.TextSize = 30
-loadingText.TextStrokeTransparency = 0.5  -- Text outline
-loadingText.BackgroundTransparency = 1  -- No background for the text
-loadingText.Parent = background
-
--- Create a progress bar below the text
-local progressBarBackground = Instance.new("Frame")
-progressBarBackground.Size = UDim2.new(0, 400, 0, 20)
-progressBarBackground.Position = UDim2.new(0.5, -200, 0.7, -10)  -- Below text
-progressBarBackground.BackgroundColor3 = Color3.fromRGB(200, 200, 200)  -- Light gray background
-progressBarBackground.Parent = background
-
-local progressBar = Instance.new("Frame")
-progressBar.Size = UDim2.new(0, 0, 1, 0)  -- Start with 0 width
-progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green progress bar
-progressBar.Parent = progressBarBackground
-
--- Function to animate the progress bar
-local function updateProgressBar()
-    local progress = 0
-    while progress < 1 do
-        wait(0.1)
-        progress = progress + 0.01  -- Increase the progress
-        progressBar.Size = UDim2.new(progress, 0, 1, 0)  -- Update progress bar width
-    end
+local activeMap
+for _, child in ipairs(workspace:GetChildren()) do
+	if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+		activeMap = child
+		break
+	end
 end
 
--- Function to rotate the loading icon
-local function rotateIcon()
-    while true do
-        loadingIcon.Rotation = loadingIcon.Rotation + 5  -- Increase the rotation by 5 degrees
-        wait(0.05)  -- Delay to make the rotation smooth
-    end
+if not activeMap then return end
+
+local coinContainer = activeMap:WaitForChild("CoinContainer")
+local tweenTimePerStud = 0.07
+
+local function tweenTo(position)
+	character:WaitForChild("Humanoid").PlatformStand = true
+	for _, part in ipairs(character:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = false
+		end
+	end
+
+	local distance = (hrp.Position - position).Magnitude
+	local tweenTime = math.clamp(distance * tweenTimePerStud, 0.5, 6)
+	local tweenInfo = TweenInfo.new(tweenTime, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+	local goal = {CFrame = CFrame.new(position + Vector3.new(0, 5, 0))}
+	local tween = TweenService:Create(hrp, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+
+	character:WaitForChild("Humanoid").PlatformStand = false
+	for _, part in ipairs(character:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = true
+		end
+	end
 end
 
--- Function to fade in the loading screen
-local function fadeIn()
-    for i = 0, 1, 0.1 do
-        background.BackgroundTransparency = i
-        wait(0.05)
-    end
+local function getClosestCoin(coins, origin)
+	local closestCoin, shortestDist
+	for _, coin in ipairs(coins) do
+		local pos
+		if coin:IsA("BasePart") then
+			pos = coin.Position
+		elseif coin:IsA("Model") and coin.PrimaryPart then
+			pos = coin.PrimaryPart.Position
+		elseif coin:IsA("Model") then
+			local primary = coin:FindFirstChildWhichIsA("BasePart")
+			if primary then
+				pos = primary.Position
+			end
+		end
+
+		if pos then
+			local dist = (origin - pos).Magnitude
+			if not shortestDist or dist < shortestDist then
+				shortestDist = dist
+				closestCoin = coin
+			end
+		end
+	end
+	return closestCoin
 end
 
--- Function to fade out the loading screen
-local function fadeOut()
-    for i = 1, 0, -0.1 do
-        background.BackgroundTransparency = i
-        wait(0.05)
-    end
+local function checkFullAndReset()
+	local gui = game:GetService("ReplicatedStorage").MainGUI.Game.CoinBags.Container
+	local eggFull = gui:FindFirstChild("Egg") and gui.Egg:FindFirstChild("Full")
+	local coinFull = gui:FindFirstChild("Coin") and gui.Coin:FindFirstChild("Full")
+	if eggFull and coinFull then
+		character:BreakJoints()
+	end
 end
 
--- Start the fade-in and animations
-fadeIn()
-task.spawn(updateProgressBar)  -- Start the progress bar animation
-task.spawn(rotateIcon)         -- Start rotating the loading icon
+task.spawn(function()
+	local visited = {}
+	while true do
+		checkFullAndReset()
 
--- Simulate a long loading process and then fade out
-wait(10)  -- Wait for 10 seconds (simulate loading time)
-fadeOut()  -- Fade out the loading screen
+		local allCoins = coinContainer:GetChildren()
+		local unvisited = {}
+		for _, coin in ipairs(allCoins) do
+			if not visited[coin] then
+				table.insert(unvisited, coin)
+			end
+		end
 
--- Optionally, you can remove the screen GUI after the fade-out to clean up
-loadingScreen:Destroy()
+		if #unvisited == 0 then break end
+
+		local closest = getClosestCoin(unvisited, hrp.Position)
+		if closest then
+			visited[closest] = true
+			local pos
+			if closest:IsA("BasePart") then
+				pos = closest.Position
+			elseif closest:IsA("Model") and closest.PrimaryPart then
+				pos = closest.PrimaryPart.Position
+			else
+				local primary = closest:FindFirstChildWhichIsA("BasePart")
+				if primary then
+					pos = primary.Position
+				end
+			end
+
+			if pos then
+				tweenTo(pos)
+			end
+		end
+	end
+end)
