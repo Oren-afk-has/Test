@@ -2,6 +2,7 @@ local TweenService = game:GetService("TweenService")
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local hrp = char:WaitForChild("HumanoidRootPart")
+local humanoid = char:WaitForChild("Humanoid")
 
 local function isBagFull()
 	local gui = player:WaitForChild("PlayerGui"):WaitForChild("MainGUI").Game.CoinBags.Container
@@ -24,6 +25,10 @@ local function getClosestCoin(coins)
 	return closest
 end
 
+local function reachedTarget(targetPos)
+	return (hrp.Position - targetPos).Magnitude < 4
+end
+
 local map = workspace:FindFirstChildWhichIsA("Model", true)
 local coins = map and map:FindFirstChild("CoinContainer")
 if not coins then return end
@@ -36,9 +41,14 @@ while true do
 
 	local closest = getClosestCoin(coins:GetChildren())
 	if closest then
-		local dist = (hrp.Position - closest.Position).Magnitude
-		TweenService:Create(hrp, TweenInfo.new(dist * 0.07, Enum.EasingStyle.Sine), {CFrame = CFrame.new(closest.Position + Vector3.new(0, 5, 0))}):Play()
-		wait(dist * 0.07)
+		local targetPos = Vector3.new(closest.Position.X, hrp.Position.Y, closest.Position.Z)
+		local dist = (hrp.Position - targetPos).Magnitude
+		local tween = TweenService:Create(hrp, TweenInfo.new(dist * 0.07, Enum.EasingStyle.Sine), {CFrame = CFrame.new(targetPos)})
+		tween:Play()
+		tween.Completed:Wait()
+		
+		-- Wait until the coin is collected or very close to the player
+		repeat wait(0.1) until not closest.Parent or reachedTarget(closest.Position)
 	end
 	wait()
 end
