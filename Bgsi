@@ -70,10 +70,14 @@ local function getClosestCoin(coins, origin)
 end
 
 local function checkFullAndReset()
-	local gui = game:GetService("ReplicatedStorage").MainGUI.Game.CoinBags.Container
-	local eggFull = gui:FindFirstChild("Egg") and gui.Egg:FindFirstChild("Full")
-	local coinFull = gui:FindFirstChild("Coin") and gui.Coin:FindFirstChild("Full")
-	if eggFull and coinFull then
+	local gui = player:WaitForChild("PlayerGui"):WaitForChild("MainGUI").Game.CoinBags.Container
+	local egg = gui:FindFirstChild("Egg")
+	local coin = gui:FindFirstChild("Coin")
+
+	local eggFullVisible = egg and egg:FindFirstChild("Full") and egg.Full:IsA("GuiObject") and egg.Full.Visible
+	local coinFullVisible = coin and coin:FindFirstChild("Full") and coin.Full:IsA("GuiObject") and coin.Full.Visible
+
+	if eggFullVisible and coinFullVisible then
 		character:BreakJoints()
 	end
 end
