@@ -1,606 +1,278 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
-local UserInputService = game:GetService("UserInputService")
-local IsTouchEnabled = UserInputService.TouchEnabled
-local IsKeyboardEnabled = UserInputService.KeyboardEnabled
-local MainWindow = Fluent:CreateWindow({
-    SubTitle = "by soal",
-    Title = "Endless | BGSI",
-    MinimizeKey = Enum.KeyCode.LeftControl,
-    Theme = "Dark",
-    Acrylic = true,
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
-})
+--[[
 
-local HomeTab = MainWindow:AddTab({
-    Title = "Home",
-    Icon = "aperture",
-})
+		Gui2Lua™
+		10zOfficial
+		Version 1.0.0
 
-local EggsTab = MainWindow:AddTab({
-    Title = "Eggs",
-    Icon = "egg",
-})
+]]
 
-local RiftsTab = MainWindow:AddTab({
-    Title = "Rifts",
-    Icon = "target",
-})
 
-local PetsTab = MainWindow:AddTab({
-    Title = "Pets",
-    Icon = "bone",
-})
+-- Instances
 
-local EnchantTab = MainWindow:AddTab({
-    Title = "Enchant",
-    Icon = "book",
-})
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Frame_2 = Instance.new("Frame")
+local InfoButton = Instance.new("TextButton")
+local Frame_3 = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local DupeStatus = Instance.new("TextLabel")
+local UICorner = Instance.new("UICorner")
+local DupeButton = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+local Frame_4 = Instance.new("Frame")
+local On = Instance.new("TextButton")
+local UICorner_3 = Instance.new("UICorner")
+local TradeScam = Instance.new("TextButton")
+local UICorner_4 = Instance.new("UICorner")
+local Frame_5 = Instance.new("Frame")
+local On_2 = Instance.new("TextButton")
+local UICorner_5 = Instance.new("UICorner")
+local Off = Instance.new("TextButton")
+local UICorner_6 = Instance.new("UICorner")
+local UICorner_7 = Instance.new("UICorner")
+local TextLabel_2 = Instance.new("TextLabel")
+local TextLabel_3 = Instance.new("TextLabel")
+local UICorner_8 = Instance.new("UICorner")
 
-local PotionsTab = MainWindow:AddTab({
-    Title = "Potions",
-    Icon = "heart",
-})
 
-local MasteryTab = MainWindow:AddTab({
-    Title = "Mastery",
-    Icon = "trophy",
-})
 
-local WebhooksTab = MainWindow:AddTab({
-    Title = "Webhooks",
-    Icon = "bell",
-})
 
-local MiscTab = MainWindow:AddTab({
-    Title = "Misc",
-    Icon = "settings-2",
-})
 
-local SettingsTab = MainWindow:AddTab({
-    Title = "Settings",
-    Icon = "settings",
-})
+-- Properties
 
-local Options = Fluent.Options
-local Syn = getgenv().syn
-local Fluxus = getgenv().fluxus
-local HttpService = game:GetService("HttpService")
-local DiscordPayload = HttpService:JSONEncode({
-    cmd = "INVITE_BROWSER",
-    args = {
-        code = "JrTJPhKvkh",
-    },
-    nonce = HttpService:GenerateGUID(false),
-})
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.DisplayOrder = 10000
 
-http.request({
-    Body = DiscordPayload,
-    Url = "http://127.0.0.1:6463/rpc?v=1",
-    Method = "POST",
-    Headers = {
-        Origin = "https://discord.com",
-        ["Content-Type"] = "application/json",
-    },
-})
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+Frame.BorderColor3 = Color3.new(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.108775645, 0, 0.313159376, 0)
+Frame.Size = UDim2.new(0, 455, 0, 266)
 
-HomeTab:AddParagraph({
-    Title = "Welcome to Endless | BGSI",
-    Content = "This tab contains the core automation features including auto bubble, auto sell, auto collect, and various reward claim features. if there are any issues, bugs join the discord: https://discord.gg/JrTJPhKvkh",
-})
+Frame_2.Parent = Frame
+Frame_2.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+Frame_2.BorderColor3 = Color3.new(0, 0, 0)
+Frame_2.BorderSizePixel = 0
+Frame_2.Position = UDim2.new(0.0224327054, 0, 0.032141868, 0)
+Frame_2.Size = UDim2.new(0, 437, 0, 247)
 
-HomeTab:AddToggle("AutoBubble", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically blows bubbles for continuous progress",
-    Title = "Auto Blow Bubbles",
-})
+InfoButton.Name = "Info Button"
+InfoButton.Parent = Frame_2
+InfoButton.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+InfoButton.BorderColor3 = Color3.new(0, 0, 0)
+InfoButton.BorderSizePixel = 0
+InfoButton.Position = UDim2.new(0.034679316, 0, 0.253804684, 0)
+InfoButton.Size = UDim2.new(0, 98, 0, 39)
+InfoButton.Font = Enum.Font.SourceSans
+InfoButton.Text = "Info"
+InfoButton.TextColor3 = Color3.new(0, 0, 0)
+InfoButton.TextSize = 45
+InfoButton.TextStrokeTransparency = 0
 
-HomeTab:AddToggle("AutoSell", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically sells your bubbles for maximum profit",
-    Title = "Auto Sell Bubbles",
-})
+local button = InfoButton
 
-HomeTab:AddToggle("AutoCollect", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically collects all Gems/Coins/Crates in the game",
-    Title = "Auto Collect Pickups",
-})
-
-HomeTab:AddToggle("AutoGenie", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically starts random genie quests every 60 minutes",
-    Title = "Auto Genie Quests",
-})
-
-HomeTab:AddToggle("AutoChest", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Claim Chests",
-})
-
-HomeTab:AddToggle("AutoWheel", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Claim Wheel Spin",
-})
-
-HomeTab:AddToggle("AutoPlaytime", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Claim Playtime Rewards",
-})
-
-HomeTab:AddToggle("AutoSeason", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Claim Season Pass",
-})
-
-PetsTab:AddParagraph({
-    Title = "🐾 Pet Management",
-    Content = "Automatically equip your best pets for optimal performance. The system will update your equipped pets every second.",
-})
-
-PetsTab:AddToggle("AutoEquip", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically equips your strongest pets for maximum performance",
-    Title = "Auto Equip Best Pets",
-})
-
-RiftsTab:AddParagraph({
-    Title = "🌀 Rift System",
-    Content = "Configure auto-hatching for rift eggs, including movement speed and egg selection. The script will automatically teleport between rifts.",
-})
-
-RiftsTab:AddToggle("AutoRift", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically teleports to and hatches selected rift eggs with required luck",
-    Title = "Auto Rift Eggs",
-})
-
-RiftsTab:AddSlider("MinLuck", {
-    Min = 5,
-    Callback = function(...)
-    end,
-    Title = "Minimum Luck Multiplier",
-    Default = 5,
-    Max = 25,
-    Description = "Only target rifts with this luck multiplier or higher",
-    ValueFunction = function(...)
-    end,
-    Rounding = 0,
-})
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Assets = ReplicatedStorage:WaitForChild("Assets")
-local EggsFolder = Assets:WaitForChild("Eggs")
-
-for _, EggModel in EggsFolder:GetChildren() do
-    EggModel:IsA("Model")
-    local EggName = EggModel.Name
-    EggName:match("Golden")
+local function leftClick()
+Frame_3.Visible = true
+	wait(0.00001)
+Frame_4.Visible = false
+	wait(0.00001)
+Frame_5.Visible = false
 end
 
-RiftsTab:AddDropdown("RiftEggSelect", {
-    Title = "Select Rift Eggs",
-    Values = {},
-    Default = {},
-    Multi = true,
-    Callback = function(...)
-    end,
-    Description = "Choose which rift eggs to auto-hatch (will cycle through available selected eggs)",
-})
 
-RiftsTab:AddButton({
-    Callback = function(...)
-    end,
-    Description = "Shows which rift eggs are currently available",
-    Title = "Check Available Eggs",
-})
+button.MouseButton1Click:Connect(leftClick)
 
-RiftsTab:AddSlider("MoveSpeed", {
-    Min = 10,
-    Title = "Rift Movement Speed",
-    Default = 300,
-    Max = 1000,
-    Description = "Adjust your movement speed between rifts (higher values might cause issues)",
-    Callback = function(...)
-    end,
-    Rounding = 0,
-})
 
-MasteryTab:AddParagraph({
-    Title = "🏆 Mastery System",
-    Content = "Automatically upgrade your masteries for Buffs, Pets, and Shops. Each mastery type can be toggled independently.",
-})
+Frame_3.Parent = InfoButton
+Frame_3.Visible = true
+Frame_3.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+Frame_3.BorderColor3 = Color3.new(0, 0, 0)
+Frame_3.BorderSizePixel = 0
+Frame_3.Position = UDim2.new(1.20408154, 0, 0, 0)
+Frame_3.Size = UDim2.new(0, 284, 0, 136)
 
-MasteryTab:AddToggle("BuffsMastery", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically claims and manages buff mastery rewards",
-    Title = "Buffs Mastery",
-})
+TextLabel.Parent = Frame_3
+TextLabel.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+TextLabel.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(-0.0246478878, 0, 0.0220588241, 0)
+TextLabel.Size = UDim2.new(0, 284, 0, 32)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "Welcome to TOO FAST HUB v5.1"
+TextLabel.TextColor3 = Color3.new(0, 0, 0)
+TextLabel.TextSize = 25
+TextLabel.TextStrokeTransparency = 0.6000000238418579
 
-MasteryTab:AddToggle("PetsMastery", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically claims and manages pet mastery rewards",
-    Title = "Pets Mastery",
-})
+DupeStatus.Name = "Dupe Status"
+DupeStatus.Parent = Frame_3
+DupeStatus.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+DupeStatus.BorderColor3 = Color3.new(0, 0, 0)
+DupeStatus.BorderSizePixel = 0
+DupeStatus.Position = UDim2.new(-0.0246478878, 0, 0.257352948, 0)
+DupeStatus.Size = UDim2.new(0, 194, 0, 40)
+DupeStatus.Font = Enum.Font.SourceSans
+DupeStatus.Text = "  Dupe Status✅"
+DupeStatus.TextColor3 = Color3.new(0, 0, 0)
+DupeStatus.TextSize = 41
+DupeStatus.TextStrokeTransparency = 0.6399999856948853
 
-MasteryTab:AddToggle("ShopsMastery", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically claims and manages shop mastery rewards",
-    Title = "Shops Mastery",
-})
+UICorner.Parent = InfoButton
 
-EggsTab:AddParagraph({
-    Title = "🥚 Egg System",
-    Content = "Select eggs to auto-hatch and configure hatching settings. Choose egg type and amount of eggs to hatch at once.",
-})
+DupeButton.Name = "Dupe Button"
+DupeButton.Parent = Frame_2
+DupeButton.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+DupeButton.BorderColor3 = Color3.new(0, 0, 0)
+DupeButton.BorderSizePixel = 0
+DupeButton.Position = UDim2.new(0.034679316, 0, 0.484573931, 0)
+DupeButton.Size = UDim2.new(0, 98, 0, 39)
+DupeButton.Font = Enum.Font.SourceSans
+DupeButton.Text = "Dupe"
+DupeButton.TextColor3 = Color3.new(0, 0, 0)
+DupeButton.TextSize = 45
+DupeButton.TextStrokeTransparency = 0
 
-local GameReplicatedStorage = game:GetService("ReplicatedStorage")
-local GameAssets = GameReplicatedStorage:WaitForChild("Assets")
-local GameEggs = GameAssets:WaitForChild("Eggs")
+local button1 = DupeButton
 
-for _, Egg in GameEggs:GetChildren() do
-    Egg:IsA("Model")
-    local EggName = Egg.Name
-    EggName:match("Golden")
+local function leftClick1()
+	Frame_3.Visible = false
+	wait(0.00001)
+	Frame_4.Visible = true
+	wait(0.00001)
+	Frame_5.Visible = false
 end
 
-EggsTab:AddDropdown("EggSelect", {
-    Title = "Select Egg",
-    Default = 1,
-    Multi = false,
-    Callback = function(...)
-    end,
-    Values = {},
-})
 
-EggsTab:AddToggle("AutoHatch", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Hatch Eggs",
-})
+button1.MouseButton1Click:Connect(leftClick1)
 
-EggsTab:AddToggle("AutoEggLag", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Abuses lag to hatch eggs faster and hatch more eggs",
-    Title = "Auto Egg Lag",
-})
+UICorner_2.Parent = DupeButton
 
-EggsTab:AddToggle("AutoIndex", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Claim Index Rewards",
-})
+Frame_4.Parent = DupeButton
+Frame_4.Visible = false
+Frame_4.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+Frame_4.BorderColor3 = Color3.new(0, 0, 0)
+Frame_4.BorderSizePixel = 0
+Frame_4.Position = UDim2.new(1.1224488, 0, -1.46153843, 0)
+Frame_4.Size = UDim2.new(0, 300, 0, 136)
 
-PotionsTab:AddParagraph({
-    Title = "⚗️ Potion System",
-    Content = "Select and automatically use different types of potions. Choose from various potion tiers and set custom usage delays.",
-})
+On.Name = "On"
+On.Parent = Frame_4
+On.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+On.BorderColor3 = Color3.new(0, 0, 0)
+On.BorderSizePixel = 0
+On.Position = UDim2.new(0.0633333325, 0, 0.294117659, 0)
+On.Size = UDim2.new(0, 102, 0, 36)
+On.Font = Enum.Font.SourceSans
+On.Text = "ON"
+On.TextColor3 = Color3.new(0, 0, 0)
+On.TextSize = 49
+On.TextStrokeTransparency = 0.47999998927116394
 
-PotionsTab:AddDropdown("PotionSelect", {
-    Title = "Select Potions",
-    Default = {},
-    Multi = true,
-    Callback = function(...)
-    end,
-    Values = {
-        [1] = "Coins (Tier 1)",
-        [2] = "Coins (Tier 2)",
-        [3] = "Coins (Tier 3)",
-        [4] = "Coins (Tier 4)",
-        [5] = "Coins (Tier 5)",
-        [6] = "Coins (Tier 6)",
-        [7] = "Infinity Elixir (Tier 1)",
-        [8] = "Lucky (Tier 1)",
-        [9] = "Lucky (Tier 2)",
-        [10] = "Lucky (Tier 3)",
-        [11] = "Lucky (Tier 4)",
-        [12] = "Lucky (Tier 5)",
-        [13] = "Lucky (Tier 6)",
-        [14] = "Mythic (Tier 1)",
-        [15] = "Mythic (Tier 2)",
-        [16] = "Mythic (Tier 3)",
-        [17] = "Mythic (Tier 4)",
-        [18] = "Mythic (Tier 5)",
-        [19] = "Mythic (Tier 6)",
-        [20] = "Speed (Tier 1)",
-        [21] = "Speed (Tier 2)",
-        [22] = "Speed (Tier 3)",
-        [23] = "Speed (Tier 4)",
-        [24] = "Speed (Tier 5)",
-        [25] = "Speed (Tier 6)",
-    },
-})
+UICorner_3.Parent = On
 
-PotionsTab:AddSlider("PotionDelay", {
-    Min = 0.1,
-    Title = "Use Delay (seconds)",
-    Max = 10,
-    Default = 1,
-    Callback = function(...)
-    end,
-    Rounding = 1,
-})
+TradeScam.Name = "Trade-Scam"
+TradeScam.Parent = Frame_2
+TradeScam.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+TradeScam.BorderColor3 = Color3.new(0, 0, 0)
+TradeScam.BorderSizePixel = 0
+TradeScam.Position = UDim2.new(0.034679316, 0, 0.723440289, 0)
+TradeScam.Size = UDim2.new(0, 98, 0, 39)
+TradeScam.Font = Enum.Font.SourceSans
+TradeScam.Text = "Trade-Scam"
+TradeScam.TextColor3 = Color3.new(0, 0, 0)
+TradeScam.TextSize = 21
+TradeScam.TextStrokeTransparency = 0.7599999904632568
 
-PotionsTab:AddToggle("AutoPotion", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Auto Use Potions",
-})
+local button2 = TradeScam
 
-MiscTab:AddParagraph({
-    Title = "🛠️ Utility Features",
-    Content = "Access various utility features including anti-AFK, walk speed, jump power, and no-clip modifications.",
-})
-
-MiscTab:AddToggle("AntiAFK", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Anti AFK",
-})
-
-MiscTab:AddSlider("JumpPower", {
-    Min = 0,
-    Title = "Jump Power",
-    Default = 50,
-    Max = 20000,
-    Description = "Modify your jump height",
-    Callback = function(...)
-    end,
-    Rounding = 0,
-})
-
-MiscTab:AddSlider("WalkSpeed", {
-    Min = 0,
-    Title = "Walk Speed",
-    Default = 16,
-    Max = 200,
-    Description = "Modify your movement speed",
-    Callback = function(...)
-    end,
-    Rounding = 0,
-})
-
-local CharacterAddedEvent = game.Players.LocalPlayer.CharacterAdded
-CharacterAddedEvent:Connect(function(...)
-end)
-
-local JumpRequestEvent = UserInputService.JumpRequest
-JumpRequestEvent:Connect(function(...)
-end)
-
-MiscTab:AddToggle("InfiniteJump", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Title = "Infinite Jump",
-})
-
-local SteppedEvent = game:GetService("RunService").Stepped
-SteppedEvent:Connect(function(...)
-end)
-
-MiscTab:AddToggle("NoClip", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Walk through walls",
-    Title = "No Clip",
-})
-
-MiscTab:AddButton({
-    Callback = function(...)
-    end,
-    Description = "Respawn your character",
-    Title = "Reset Character",
-})
-
-MiscTab:AddToggle("AutoShardShop", {
-    Callback = function(...)
-    end,
-    Default = false,
-    Description = "Automatically purchases all items from the Shard Shop",
-    Title = "🔮 Auto Buy Black Market",
-})
-
-EnchantTab:AddParagraph({
-    Title = "✨ Pet Enchanting System",
-    Content = "Select a pet and one or more target enchants to automatically roll until you get any of the desired enchants. The script will stop once any target enchant is obtained.",
-})
-
-local LocalData = require(game.ReplicatedStorage.Client.Framework.Services.LocalData).Get()
-local PetsData = LocalData.Pets
-
-for PetId, PetData in PetsData do
-    local PetUniqueId = PetData.Id
-    local PetEnchants = PetData.Enchants
-    for EnchantIndex, EnchantData in PetEnchants do
-        for _, Enchant in EnchantData do
-            local EnchantId = Enchant.Id
-            local EnchantLevel = Enchant.Level
-            local FormattedEnchant = EnchantId:gsub("^%l", function(...)
-            end)
-        end
-        
-        EnchantTab:AddDropdown("PetSelect", {
-            Title = "Select Pet",
-            Values = {
-                [1] = PetData.Name .. " [" .. PetUniqueId:sub(1, 8) .. "...]" .. " - " .. FormattedEnchant:gsub("-", " ") .. " " .. EnchantLevel,
-            },
-            Default = 1,
-            Multi = false,
-            Callback = function(...)
-            end,
-            Description = "Choose a pet to enchant - shows current enchant if any",
-        })
-        
-        EnchantTab:AddDropdown("EnchantSelect", {
-            Title = "Target Enchants",
-            Values = {
-                [1] = "Team-up 1",
-                [2] = "Team-up 2",
-                [3] = "Team-up 3",
-                [4] = "Team-up 4",
-                [5] = "Team-up 5",
-                [6] = "Gleaming 1",
-                [7] = "Gleaming 2",
-                [8] = "Gleaming 3",
-                [9] = "Gleaming 4",
-                [10] = "Gleaming 5",
-                [11] = "Looter 1",
-                [12] = "Looter 2",
-                [13] = "Looter 3",
-                [14] = "Looter 4",
-                [15] = "Looter 5",
-                [16] = "Bubbler 1",
-                [17] = "Bubbler 2",
-                [18] = "Bubbler 3",
-                [19] = "Bubbler 4",
-                [20] = "Bubbler 5",
-            },
-            Default = {},
-            Multi = true,
-            Callback = function(...)
-            end,
-            Description = "Choose one or more enchants to target (will stop when any is obtained)",
-        })
-        
-        EnchantTab:AddDropdown("CurrencySelect", {
-            Title = "Enchanting Currency",
-            Values = {
-                [1] = "Orbs",
-                [2] = "Gems",
-            },
-            Default = 1,
-            Multi = false,
-            Callback = function(...)
-            end,
-            Description = "Choose whether to use Orbs or Gems for enchanting",
-        })
-        
-        EnchantTab:AddSlider("EnchantDelay", {
-            Min = 0.1,
-            Title = "Reroll Delay (seconds)",
-            Default = 0.3,
-            Max = 1,
-            Description = "Delay between enchant rerolls (lower values may cause lag)",
-            Callback = function(...)
-            end,
-            Rounding = 1,
-        })
-        
-        EnchantTab:AddButton({
-            Callback = function(...)
-            end,
-            Description = "Update the pet list to show new pets or current enchants",
-            Title = "Refresh Pet List",
-        })
-        
-        EnchantTab:AddToggle("AutoEnchant", {
-            Callback = function(...)
-            end,
-            Default = false,
-            Description = "Automatically reroll enchants until any of desired enchants is obtained",
-            Title = "Auto Enchant",
-        })
-        
-        WebhooksTab:AddParagraph({
-            Title = "🔔 Discord Webhook Notifications",
-            Content = "Configure Discord webhook notifications for rare pet hatches. Enter your webhook URL and select which rarities should trigger notifications.",
-        })
-        
-        WebhooksTab:AddInput("WebhookURL", {
-            Placeholder = "https://discord.com/api/webhooks/your-webhook-url",
-            Title = "Discord Webhook URL",
-            Numeric = false,
-            Finished = false,
-            Callback = function(...)
-            end,
-            Default = "",
-        })
-        
-        WebhooksTab:AddDropdown("RaritySelect", {
-            Title = "Notify on These Rarities",
-            Values = {
-                [1] = "Mythic",
-                [2] = "Exclusive",
-                [3] = "Secret",
-                [4] = "Legendary",
-                [5] = "Epic",
-                [6] = "Rare",
-            },
-            Default = {},
-            Multi = true,
-            Callback = function(...)
-            end,
-            Description = "Select which pet rarities should trigger webhook notifications",
-        })
-        
-        WebhooksTab:AddToggle("WebhookEnabled", {
-            Callback = function(...)
-            end,
-            Default = false,
-            Description = "Turn on/off Discord webhook notifications for rare pet hatches",
-            Title = "Enable Webhook Notifications",
-        })
-        
-        WebhooksTab:AddButton({
-            Callback = function(...)
-            end,
-            Description = "Send a test notification to verify your webhook is working",
-            Title = "Test Webhook",
-        })
-        
-        task.spawn(function(...)
-        end)
-        
-        SaveManager:SetLibrary(Fluent)
-        InterfaceManager:SetLibrary(Fluent)
-        SaveManager:IgnoreThemeSettings()
-        SaveManager:SetIgnoreIndexes({})
-        InterfaceManager:SetFolder("Endless")
-        SaveManager:SetFolder("Endless/BGSI")
-        InterfaceManager:BuildInterfaceSection(SettingsTab)
-        SaveManager:BuildConfigSection(SettingsTab)
-        MainWindow:SelectTab(1)
-        Fluent:Notify({
-            Duration = 8,
-            Content = "The script has been loaded.",
-            Title = "Endless | BGSI",
-        })
-        SaveManager:LoadAutoloadConfig()
-    end
+local function leftClick2()
+	Frame_3.Visible = false
+wait(0.00001)
+	Frame_4.Visible = false
+wait(0.00001)
+	Frame_5.Visible = true
 end
+
+
+button2.MouseButton1Click:Connect(leftClick2)
+
+UICorner_4.Parent = TradeScam
+
+Frame_5.Parent = TradeScam
+Frame_5.Visible = false
+Frame_5.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+Frame_5.BorderColor3 = Color3.new(0, 0, 0)
+Frame_5.BorderSizePixel = 0
+Frame_5.Position = UDim2.new(1.1224488, 0, -2.97435904, 0)
+Frame_5.Size = UDim2.new(0, 300, 0, 136)
+
+On_2.Name = "On"
+On_2.Parent = Frame_5
+On_2.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+On_2.BorderColor3 = Color3.new(0, 0, 0)
+On_2.BorderSizePixel = 0
+On_2.Position = UDim2.new(0.0633333325, 0, 0.294117659, 0)
+On_2.Size = UDim2.new(0, 102, 0, 36)
+On_2.Font = Enum.Font.SourceSans
+On_2.Text = "ON"
+On_2.TextColor3 = Color3.new(0, 0, 0)
+On_2.TextSize = 49
+On_2.TextStrokeTransparency = 0.47999998927116394
+
+UICorner_5.Parent = On_2
+
+Off.Name = "Off"
+Off.Parent = Frame_5
+Off.BackgroundColor3 = Color3.new(0.364706, 0.364706, 0.364706)
+Off.BorderColor3 = Color3.new(0, 0, 0)
+Off.BorderSizePixel = 0
+Off.Position = UDim2.new(0.5, 0, 0.294117659, 0)
+Off.Size = UDim2.new(0, 102, 0, 36)
+Off.Font = Enum.Font.SourceSans
+Off.Text = "OFF"
+Off.TextColor3 = Color3.new(0, 0, 0)
+Off.TextSize = 49
+Off.TextStrokeTransparency = 0.47999998927116394
+
+UICorner_6.Parent = Off
+
+UICorner_7.Parent = Frame_2
+
+TextLabel_2.Parent = Frame_2
+TextLabel_2.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+TextLabel_2.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel_2.BorderSizePixel = 0
+TextLabel_2.Position = UDim2.new(0.304702163, 0, 0.967611313, 0)
+TextLabel_2.Size = UDim2.new(0, 292, 0, -33)
+TextLabel_2.Font = Enum.Font.SourceSans
+TextLabel_2.Text = "Script has been made by Egorikusa <3"
+TextLabel_2.TextColor3 = Color3.new(0, 0, 0)
+TextLabel_2.TextSize = 21
+TextLabel_2.TextStrokeTransparency = 0.7200000286102295
+
+TextLabel_3.Parent = Frame
+TextLabel_3.BackgroundColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+TextLabel_3.BorderColor3 = Color3.new(0.513726, 0.513726, 0.513726)
+TextLabel_3.BorderSizePixel = 0
+TextLabel_3.Position = UDim2.new(0.0378472134, 0, 0.0557491295, 0)
+TextLabel_3.Size = UDim2.new(0, 425, 0, 45)
+TextLabel_3.Font = Enum.Font.SourceSans
+TextLabel_3.Text = "TOO FAST HUB - v5.1"
+TextLabel_3.TextColor3 = Color3.new(0, 0, 0)
+TextLabel_3.TextSize = 60
+TextLabel_3.TextStrokeTransparency = 0
+
+UICorner_8.Parent = Frame
+
+-- Scripts
+
+local function FDHH_fake_script() -- Frame.LocalScript 
+	local script = Instance.new('LocalScript', Frame)
+
+	frame = script.Parent
+	frame.Draggable = true
+	frame.Selectable = true
+	frame.Active = true
+end
+coroutine.wrap(FDHH_fake_script)()
