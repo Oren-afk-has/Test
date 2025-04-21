@@ -6,6 +6,9 @@ local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local hrp = character:WaitForChild("HumanoidRootPart")
 
+-- Customize this value to change tween speed (lower = faster)
+local tweenSpeed = 0.07 -- seconds per stud
+
 local activeMap
 for _, child in ipairs(workspace:GetChildren()) do
 	if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
@@ -17,7 +20,6 @@ end
 if not activeMap then return end
 
 local coinContainer = activeMap:WaitForChild("CoinContainer")
-local tweenTimePerStud = 0.07
 
 local function tweenTo(position)
 	character:WaitForChild("Humanoid").PlatformStand = true
@@ -27,9 +29,11 @@ local function tweenTo(position)
 		end
 	end
 
+	workspace.CurrentCamera.CameraSubject = hrp
+
 	local distance = (hrp.Position - position).Magnitude
-	local tweenTime = math.clamp(distance * tweenTimePerStud, 0.5, 6)
-	local tweenInfo = TweenInfo.new(tweenTime, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+	local tweenTime = math.clamp(distance * tweenSpeed, 0.5, 6)
+	local tweenInfo = TweenInfo.new(tweenTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 	local goal = {CFrame = CFrame.new(position + Vector3.new(0, 5, 0))}
 	local tween = TweenService:Create(hrp, tweenInfo, goal)
 	tween:Play()
