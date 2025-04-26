@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
@@ -8,7 +7,6 @@ local character = player.Character or player.CharacterAdded:Wait()
 local hrp = character:WaitForChild("HumanoidRootPart")
 
 local found = false
-local noclipConnection
 
 for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
     if rift.Name == "event-1" or rift.Name == "event-2" then
@@ -25,30 +23,14 @@ for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
 
             local targetPart = rift.PrimaryPart
             if targetPart then
-                hrp.Anchored = true
-
-                noclipConnection = RunService.Stepped:Connect(function()
-                    for _, part in ipairs(character:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.CanCollide = false
-                        end
-                    end
-                end)
-
                 local goal = {
                     CFrame = targetPart.CFrame * CFrame.new(0, 5, -5)
                 }
 
-                local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local tweenInfo = TweenInfo.new(15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
                 local tween = TweenService:Create(hrp, tweenInfo, goal)
                 tween:Play()
                 tween.Completed:Wait()
-
-                if noclipConnection then
-                    noclipConnection:Disconnect()
-                end
-
-                hrp.Anchored = false
 
                 local eventRemote = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event")
 
