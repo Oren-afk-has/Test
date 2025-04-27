@@ -35,17 +35,34 @@ Section:AddParagraph({
 
 -- Farming
 local Section = Tabs.Farming:AddSection("Blowing")
-local Toggle = Tabs.Farming:AddToggle("Bubbles", 
+local Toggle = Tabs.Farming:AddToggle("Blow", 
 {
     Title = "Auto Blow Bubbles", 
     Description = "Automatically Blows Bubbles For You",
     Default = false,
     Callback = function(state)
         if state then
-            local args = {
-                [1] = "BlowBubble"
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+            while state do
+                local args = {
+                    [1] = "BlowBubble"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                task.wait()
+            end
+        end
+    end
+})
+
+local Toggle = Tabs.Hatching:AddToggle("EggAnimation", 
+{
+    Title = "Remove Egg Animation", 
+    Description = "Removes Any Egg Animation For Better Experience ",
+    Default = false,
+    Callback = function(state)
+        if state then
+            local Module = require(game:GetService("ReplicatedStorage").Client.Effects.HatchEgg)
+            local result = { Pets = {} }
+            Module.Play(Module, result)
         end
     end
 })
