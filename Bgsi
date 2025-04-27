@@ -53,19 +53,31 @@ local Toggle = Tabs.Farming:AddToggle("Blow",
     end
 })
 
-local Toggle = Tabs.Hatching:AddToggle("EggAnimation", 
-{
-    Title = "Remove Egg Animation", 
-    Description = "Removes Any Egg Animation For Better Experience ",
-    Default = false,
-    Callback = function(state)
-        if state then
-            local Module = require(game:GetService("ReplicatedStorage").Client.Effects.HatchEgg)
-            local result = { Pets = {} }
-            Module.Play(Module, result)
-        end
-    end
+local excluded = {
+    ["gift-rift"] = true,
+    ["golden-chest"] = true,
+    ["royal-chest"] = true,
+}
+
+-- Create the dropdown first with empty Values (we'll fill them in)
+local MultiDropdown = Tabs.Rifts:AddDropdown("MultiDropdown", {
+    Title = "Rifts",
+    Description = "Select What Rift You Want To Hatch",
+    Values = {}, -- Empty for now
+    Multi = true,
+    Default = {},
 })
+
+-- Collect rift names
+local riftNames = {}
+for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+    if not excluded[rift.Name] then
+        table.insert(riftNames, rift.Name)
+    end
+end
+
+-- Update the dropdown's Values
+MultiDropdown:SetValues(riftNames)
 
 --Config Saving
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
