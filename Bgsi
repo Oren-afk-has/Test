@@ -53,91 +53,68 @@ local Toggle = Tabs.Farming:AddToggle("Blow",
     end
 })
 
-local excluded = {
-    ["gift-rift"] = true,
-    ["golden-chest"] = true,
-    ["royal-chest"] = true,
-}
+local TweenService = game:GetService("TweenService")
 
+-- Dropdown for selecting rifts
 local MultiDropdown = Tabs.Rifts:AddDropdown("MultiDropdown", {
     Title = "Rifts",
     Description = "Select What Rift You Want To Hatch",
-    Values = {},
+    Values = {},  -- You'll populate this with rift names later
     Multi = true,
     Default = {},
 })
 
+-- Populate the dropdown with available rifts
 local riftNames = {}
 for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
     if not excluded[rift.Name] then
         table.insert(riftNames, rift.Name)
     end
 end
-
 MultiDropdown:SetValues(riftNames)
 
-local Toggle = Tabs.Rifts:AddToggle("Rift", {
-    Title = "AutoFarm Rift",
-    Description = "AutoFarms Selected Rift",
+-- Toggle for moving to selected rift
+local Toggle = Tabs.Rifts:AddToggle("Rift", 
+{
+    Title = "Toggle", 
+    Description = "Toggle description",
     Default = false,
     Callback = function(state)
         if state then
-            -- Start autofarming (Tween to selected Rift)
-            local selectedRifts = MultiDropdown.Values  -- This is the property storing selected values
-            
+            print("Toggle On")
+            -- Get selected rifts from the dropdown
+            local selectedRifts = MultiDropdown:GetValue()
+
+            -- Iterate over each selected rift
             for _, riftName in ipairs(selectedRifts) do
+                -- Find the rift with the given name
                 local rift = workspace.Rendered.Rifts:FindFirstChild(riftName)
-                if rift then
-                    local sign = rift:FindFirstChild("Sign")
-                    if sign then
-                        -- Find a part within the "Sign" model to use for the position
-                        local signPart = sign:FindFirstChildOfClass("BasePart")  -- Looks for the first BasePart (Part, MeshPart, etc.)
-                        if signPart then
-                            -- Debug log to confirm part and position
-                            print("Tweening to Sign Part:", signPart.Name, "Position:", signPart.Position)
-                            
-                            local player = game.Players.LocalPlayer
-                            local char = player.Character
-                            if char then
-                                local hrp = char:WaitForChild("HumanoidRootPart")
-                                if hrp then
-                                    -- Debug log to confirm HumanoidRootPart
-                                    print("HumanoidRootPart found:", hrp.Position)
+                if rift and not excluded[rift.Name] then
+                    local display = rift:FindFirstChild("Display")
+                    if display and display:IsA("BasePart") then
+                        -- Get the position of the Display part
+                        local targetPosition = display.Position
 
-                                    local tweenService = game:GetService("TweenService")
-                                    local goal = {Position = signPart.Position}
-                                    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-                                    local tween = tweenService:Create(hrp, tweenInfo, goal)
+                        -- Get the player's character
+                        local character = game.Players.LocalPlayer.Character
+                        if character then
+                            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-                                    -- Debug log to confirm tween creation
-                                    print("Tween created with goal:", goal.Position)
-                                    tween:Play()
+                            -- Create a Tween for smooth movement to the target position
+                            local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                            local goal = {Position = targetPosition}
+                            local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
 
-                                    -- Add event to detect when tween is completed
-                                    tween.Completed:Connect(function(status)
-                                        if status == Enum.PlaybackState.Completed then
-                                            print("Tween completed successfully!")
-                                        end
-                                    end)
-                                else
-                                    print("HumanoidRootPart not found!")
-                                end
-                            else
-                                print("Character not found!")
-                            end
-                        else
-                            print("No valid part found in Sign!")
+                            -- Play the tween to move the player
+                            tween:Play()
                         end
                     else
-                        print("No Sign found for rift:", riftName)
+                        print(rift.Name .. " does not have a valid Display part.")
                     end
-                else
-                    print("Rift not found:", riftName)
                 end
             end
         else
-            -- Toggle off (Stop tweens or reset to original position)
-            print("Toggle Off - Stopping all tweens")
+            print("Toggle Off")
         end
     end
 })
