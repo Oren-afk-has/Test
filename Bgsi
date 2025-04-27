@@ -1,3 +1,58 @@
+--Source
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+--Window
+local Window = Fluent:CreateWindow({
+    Title = "Fluent " .. Fluent.Version,
+    SubTitle = "By Oren",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = false,
+    Theme = "Darker",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+--Tabs
+local Tabs = {
+    Home = Window:AddTab({ Title = "Home", Icon = "" }),
+    Farming = Window:AddTab({ Title = "Farming", Icon = "" }),
+    Hatching = Window:AddTab({ Title = "Hatching", Icon = "" }),
+    Pets = Window:AddTab({ Title = "Pets", Icon = "" }),
+    Rifts = Window:AddTab({ Title = "Rifts", Icon = "" }),
+    Quests = Window:AddTab({ Title = "Quests", Icon = "" }),
+    Merchant = Window:AddTab({ Title = "Merchants", Icon = "" }),
+    Potions = Window:AddTab({ Title = "Potions", Icon = "" }),
+    Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
+    Others = Window:AddTab({ Title = "Others", Icon = "" }),
+    Settings = Window:AddTab({ Title = "Config", Icon = "" }),
+}
+
+--Credits
+local Section = Tabs.Home:AddSection("Credits")
+Section:AddParagraph({
+    Title = "This Script Is A Work In Progess I Dunno If This Will Ever Be \nRealeased"
+})
+
+-- Farming
+local Section = Tabs.Farming:AddSection("Blowing")
+local Toggle = Tabs.Farming:AddToggle("Blow", 
+{
+    Title = "Auto Blow Bubbles", 
+    Description = "Automatically Blows Bubbles For You",
+    Default = false,
+    Callback = function(state)
+        if state then
+            while state do
+                local args = {
+                    [1] = "BlowBubble"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                task.wait()
+            end
+        end
+    end
+})
+
 local excluded = {
     ["gift-rift"] = true,
     ["golden-chest"] = true,
@@ -66,3 +121,11 @@ if #riftNames > 0 then
 else
     MultiDropdown:SetValues({"No rifts available"})
 end
+
+--Config Saving
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
