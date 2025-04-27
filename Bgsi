@@ -53,7 +53,6 @@ local Toggle = Tabs.Farming:AddToggle("Blow",
     end
 })
 
---Rifts
 local excluded = {
     ["gift-rift"] = true,
     ["golden-chest"] = true,
@@ -84,31 +83,61 @@ local Toggle = Tabs.Rifts:AddToggle("Rift", {
     Callback = function(state)
         if state then
             -- Start autofarming (Tween to selected Rift)
-            local selectedRifts = MultiDropdown:GetValue()  -- Get selected rift(s)
+            local selectedRifts = MultiDropdown.Values  -- This is the property storing selected values
             
             for _, riftName in ipairs(selectedRifts) do
                 local rift = workspace.Rendered.Rifts:FindFirstChild(riftName)
                 if rift then
                     local sign = rift:FindFirstChild("Sign")
                     if sign then
-                        -- Tween the player to the Sign position
-                        local player = game.Players.LocalPlayer
-                        local char = player.Character
-                        if char then
-                            local hrp = char:WaitForChild("HumanoidRootPart")
-                            if hrp then
-                                local tweenService = game:GetService("TweenService")
-                                local goal = {Position = sign.Position}
-                                local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, false)
-                                local tween = tweenService:Create(hrp, tweenInfo, goal)
-                                tween:Play()
+                        -- Find a part within the "Sign" model to use for the position
+                        local signPart = sign:FindFirstChildOfClass("BasePart")  -- Looks for the first BasePart (Part, MeshPart, etc.)
+                        if signPart then
+                            -- Debug log to confirm part and position
+                            print("Tweening to Sign Part:", signPart.Name, "Position:", signPart.Position)
+                            
+                            local player = game.Players.LocalPlayer
+                            local char = player.Character
+                            if char then
+                                local hrp = char:WaitForChild("HumanoidRootPart")
+                                if hrp then
+                                    -- Debug log to confirm HumanoidRootPart
+                                    print("HumanoidRootPart found:", hrp.Position)
+
+                                    local tweenService = game:GetService("TweenService")
+                                    local goal = {Position = signPart.Position}
+                                    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+                                    local tween = tweenService:Create(hrp, tweenInfo, goal)
+
+                                    -- Debug log to confirm tween creation
+                                    print("Tween created with goal:", goal.Position)
+                                    tween:Play()
+
+                                    -- Add event to detect when tween is completed
+                                    tween.Completed:Connect(function(status)
+                                        if status == Enum.PlaybackState.Completed then
+                                            print("Tween completed successfully!")
+                                        end
+                                    end)
+                                else
+                                    print("HumanoidRootPart not found!")
+                                end
+                            else
+                                print("Character not found!")
                             end
+                        else
+                            print("No valid part found in Sign!")
                         end
+                    else
+                        print("No Sign found for rift:", riftName)
                     end
+                else
+                    print("Rift not found:", riftName)
                 end
             end
         else
             -- Toggle off (Stop tweens or reset to original position)
+            print("Toggle Off - Stopping all tweens")
         end
     end
 })
