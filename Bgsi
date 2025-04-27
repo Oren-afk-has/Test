@@ -53,71 +53,70 @@ local Toggle = Tabs.Farming:AddToggle("Blow",
     end
 })
 
-local TweenService = game:GetService("TweenService")
+local excluded = {
+    ["gift-rift"] = true,
+    ["golden-chest"] = true,
+    ["royal-chest"] = true,
+}
 
--- Dropdown for selecting rifts
 local MultiDropdown = Tabs.Rifts:AddDropdown("MultiDropdown", {
     Title = "Rifts",
     Description = "Select What Rift You Want To Hatch",
-    Values = {},  -- You'll populate this with rift names later
+    Values = {},
     Multi = true,
     Default = {},
 })
 
--- Populate the dropdown with available rifts
 local riftNames = {}
 for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
     if not excluded[rift.Name] then
         table.insert(riftNames, rift.Name)
     end
 end
+
 MultiDropdown:SetValues(riftNames)
 
--- Toggle for moving to selected rift
-local Toggle = Tabs.Rifts:AddToggle("Rift", 
+local TweenService = game:GetService("TweenService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local Toggle = Tabs.Rifts:AddToggle("Rift",  
 {
-    Title = "Toggle", 
-    Description = "Toggle description",
-    Default = false,
+    Title = "AutoFarm Rifts",  
+    Description = "Test", 
+    Default = false,  
     Callback = function(state)
         if state then
             print("Toggle On")
-            -- Get selected rifts from the dropdown
-            local selectedRifts = MultiDropdown:GetValue()
-
-            -- Iterate over each selected rift
-            for _, riftName in ipairs(selectedRifts) do
-                -- Find the rift with the given name
+            
+            -- Get the selected rift(s) from the MultiDropdown
+            local selectedRifts = MultiDropdown:GetValues()
+            
+            -- If there is at least one rift selected, tween the player to it
+            if #selectedRifts > 0 then
+                local riftName = selectedRifts[1] -- Assuming you want to go to the first selected rift
                 local rift = workspace.Rendered.Rifts:FindFirstChild(riftName)
-                if rift and not excluded[rift.Name] then
-                    local display = rift:FindFirstChild("Display")
-                    if display and display:IsA("BasePart") then
-                        -- Get the position of the Display part
-                        local targetPosition = display.Position
-
-                        -- Get the player's character
-                        local character = game.Players.LocalPlayer.Character
-                        if character then
-                            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-                            -- Create a Tween for smooth movement to the target position
-                            local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                            local goal = {Position = targetPosition}
-                            local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
-
-                            -- Play the tween to move the player
-                            tween:Play()
-                        end
-                    else
-                        print(rift.Name .. " does not have a valid Display part.")
-                    end
+                
+                if rift then
+                    -- Create a Tween to move the player to the rift
+                    local riftPosition = rift.Position
+                    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) -- Adjust speed if needed
+                    local tweenGoal = {Position = riftPosition}
+                    local tween = TweenService:Create(character.HumanoidRootPart, tweenInfo, tweenGoal)
+                    tween:Play()
+                    
+                    -- Optionally, you can wait for the tween to complete before continuing
+                    tween.Completed:Wait()
+                else
+                    print("Rift not found: " .. riftName)
                 end
             end
         else
             print("Toggle Off")
         end
-    end
+    end 
 })
+
 
 --Config Saving
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
