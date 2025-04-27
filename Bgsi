@@ -53,22 +53,21 @@ local Toggle = Tabs.Farming:AddToggle("Blow",
     end
 })
 
+--Rifts
 local excluded = {
     ["gift-rift"] = true,
     ["golden-chest"] = true,
     ["royal-chest"] = true,
 }
 
--- Create the dropdown first with empty Values (we'll fill them in)
 local MultiDropdown = Tabs.Rifts:AddDropdown("MultiDropdown", {
     Title = "Rifts",
     Description = "Select What Rift You Want To Hatch",
-    Values = {}, -- Empty for now
+    Values = {},
     Multi = true,
     Default = {},
 })
 
--- Collect rift names
 local riftNames = {}
 for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
     if not excluded[rift.Name] then
@@ -76,8 +75,43 @@ for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
     end
 end
 
--- Update the dropdown's Values
 MultiDropdown:SetValues(riftNames)
+
+local Toggle = Tabs.Rifts:AddToggle("Rift", {
+    Title = "AutoFarm Rift",
+    Description = "AutoFarms Selected Rift",
+    Default = false,
+    Callback = function(state)
+        if state then
+            -- Start autofarming (Tween to selected Rift)
+            local selectedRifts = MultiDropdown:GetValue()  -- Get selected rift(s)
+            
+            for _, riftName in ipairs(selectedRifts) do
+                local rift = workspace.Rendered.Rifts:FindFirstChild(riftName)
+                if rift then
+                    local sign = rift:FindFirstChild("Sign")
+                    if sign then
+                        -- Tween the player to the Sign position
+                        local player = game.Players.LocalPlayer
+                        local char = player.Character
+                        if char then
+                            local hrp = char:WaitForChild("HumanoidRootPart")
+                            if hrp then
+                                local tweenService = game:GetService("TweenService")
+                                local goal = {Position = sign.Position}
+                                local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, false)
+                                local tween = tweenService:Create(hrp, tweenInfo, goal)
+                                tween:Play()
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            -- Toggle off (Stop tweens or reset to original position)
+        end
+    end
+})
 
 --Config Saving
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
